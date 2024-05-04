@@ -1,4 +1,5 @@
 #include "doubly_linked_list.hpp"
+#include <iostream>
 
 using IBusko::DoublyLinkedList;
 
@@ -14,7 +15,7 @@ void DoublyLinkedList<T>::push_back(const T &value) noexcept {
 	} else {
 		new_elem->prev = end;
 		end->next = new_elem;
-		end = elem;
+		end = new_elem;
 		
 	}
 }
@@ -47,7 +48,7 @@ bool DoublyLinkedList<T>::remove_first(const T &value) noexcept {
 					current->next->prev = current->prev;
 				}
             }
-			сurrent = nullptr;
+			delete current;
 			return true;
 		}
 		current = current->next;
@@ -80,11 +81,12 @@ bool DoublyLinkedList<T>::has_item(const T &value) const noexcept {
 
 template <typename T>
 DoublyLinkedList<T>::~DoublyLinkedList() noexcept {
-	bool result;
-	while (True) {
-		result = this->remove_first(begin.value);
-		if (not result) {
-			break;
-		}
-	}
+    Node* node;
+    while(begin != end){
+        if(end == nullptr) break;
+        node = end;
+        end = node->prev;
+        delete node;
+    }
+    delete begin;
 }
