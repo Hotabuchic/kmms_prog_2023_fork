@@ -1,10 +1,11 @@
 #include "vector.hpp"
+#include <iostream>
 
 using IBusko::Vector;
 
 template <typename T>
 Vector<T>::Vector() noexcept{
-    arr = new T[this->capacity];
+    arr = new T[capacity];
 }
 
 template <typename T>
@@ -14,9 +15,9 @@ Vector<T>::~Vector() noexcept{
 
 template <typename T>
 void Vector<T>::change_size() noexcept {
-	this->capacity *= 2;
-    T* arr_copy = new T[this->capacity];
-    for(std::size_t i = 0; i < this->get_size(); i++){
+	capacity *= 2;
+    T* arr_copy = new T[capacity];
+    for(int i = 0; i < size_; i++){
         arr_copy[i] = arr[i];
     }
     delete[] arr;
@@ -25,17 +26,17 @@ void Vector<T>::change_size() noexcept {
 
 template <typename T>
 void Vector<T>::push_back(const T& value) noexcept{
-    if(this->get_size() >= this->capacity){
+    if(size_ >= capacity){
         change_size();
     }
-    arr[get_size()] = value;
+    arr[size_] = value;
 
-    this->size += 1;
+    size_ += 1;
 }
 
 template <typename T>
 bool Vector<T>::has_item(const T& value) const noexcept{
-    for (size_t i = 0; i < this->get_size(); i++){
+    for (int i = 0; i < size_; i++){
         if (arr[i] == value){
             return true;
         }
@@ -45,10 +46,10 @@ bool Vector<T>::has_item(const T& value) const noexcept{
 
 template <typename T>
 bool Vector<T>::insert(const int position, const T& value){
-    if(this->get_size() >= this->capacity){
+    if(size_ >= capacity){
         change_size();
     }
-    for (size_t i = this->get_size(); i > position); i--) {
+    for (int i = size_; i > position; i--) {
 		arr[i] = arr[i - 1];
 	}
 	arr[position] = value;
@@ -57,18 +58,33 @@ bool Vector<T>::insert(const int position, const T& value){
 
 template <typename T>
 void Vector<T>::print() const noexcept{
-    for(std::size_t i = 0; i < this->get_size(); i++){
+    for(int i = 0; i < size_; i++){
         std::cout << arr[i] << "\n";
     }
 }
 
 template <typename T>
-std::size_t Vector<T>::get_size() const noexcept{
-    return this->size;
+int Vector<T>::size() const noexcept{
+    return size_;
 }
 
 template <typename T>
 bool Vector<T>::remove_first(const T& value) noexcept{
-    // need realize
+    if (has_item(value)) {
+		size_--;
+		T* arr_copy = new T[size_];
+		int index = 0;
+		while (arr[index] != value) {
+			arr_copy[index] = arr[index];
+			index++;
+		}
+		for (int i = index; i < size_; i++) {
+			arr_copy[i] = arr[i + 1];
+		}
+		arr = arr_copy;
+		delete arr;
+		return true;
+	}
+	return false;
 }
 
